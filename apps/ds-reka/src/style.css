@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@import "@ds-poc/tokens/css";
+
+/*
+ * Tailwind v4 é CSS-first: em vez do `theme.extend` (JS) do v3, mapeamos os
+ * tokens do design system (--ds-*, gerados pelo packages/tokens) para o
+ * namespace de tema do Tailwind (--color-*, --spacing-*, --radius-*, --text-*)
+ * dentro de um bloco @theme. Isso habilita classes como bg-brand-600,
+ * rounded-md e text-base usando o valor vindo do DS, não um valor hardcoded.
+ */
+@theme {
+  --color-brand-600: var(--ds-color-brand-600);
+  --color-brand-700: var(--ds-color-brand-700);
+  --color-neutral-100: var(--ds-color-neutral-100);
+  --color-neutral-300: var(--ds-color-neutral-300);
+  --color-neutral-900: var(--ds-color-neutral-900);
+
+  --spacing-1: var(--ds-spacing-1);
+  --spacing-2: var(--ds-spacing-2);
+  --spacing-3: var(--ds-spacing-3);
+  --spacing-4: var(--ds-spacing-4);
+  --spacing-5: var(--ds-spacing-5);
+  --spacing-6: var(--ds-spacing-6);
+  --spacing-7: var(--ds-spacing-7);
+  --spacing-8: var(--ds-spacing-8);
+
+  --radius-sm: var(--ds-radius-sm);
+  --radius-md: var(--ds-radius-md);
+  --radius-lg: var(--ds-radius-lg);
+
+  --text-base: var(--ds-font-size-base);
+  --text-heading: var(--ds-font-size-heading);
+  --font-weight-regular: var(--ds-font-weight-regular);
+  --font-weight-bold: var(--ds-font-weight-bold);
+}
+
+body {
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
+}

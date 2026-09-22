@@ -1,0 +1,45 @@
+{
+  "name": "ds-reka",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "predev": "pnpm --filter @ds-poc/tokens build",
+    "dev": "vite",
+    "prebuild": "pnpm --filter @ds-poc/tokens build",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "prestorybook": "pnpm --filter @ds-poc/tokens build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@ds-poc/tokens": "workspace:*",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "reka-ui": "2.10.5",
+    "tailwind-merge": "3.7.0",
+    "vue": "^3.5.42"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "^24.13.3",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
+    "tailwindcss": "4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vue-tsc": "^3.3.11",
+    "storybook": "^10.6.0",
+    "@storybook/vue3-vite": "^10.6.0",
+    "@chromatic-com/storybook": "latest",
+    "@storybook/addon-vitest": "^10.6.0",
+    "@storybook/addon-a11y": "^10.6.0",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/addon-onboarding": "^10.6.0",
+    "vitest": "latest",
+    "playwright": "latest",
+    "@vitest/browser-playwright": "latest",
+    "@vitest/coverage-v8": "latest"
+  }
+}
