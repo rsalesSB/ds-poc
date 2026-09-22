@@ -72,12 +72,14 @@ In short: shadcn-vue's speed gain is proportional to how behaviorally complex th
 
 ```bash
 pnpm install
-pnpm build:tokens   # generates packages/tokens/dist/css/variables.css
-
-pnpm --filter ds-reka storybook    # http://localhost:6006
-pnpm --filter ds-shadcn storybook  # http://localhost:6007
+pnpm storybook   # builds the tokens, then starts both Storybooks together
 ```
 
-(Each app's `predev`/`prebuild`/`prestorybook` already runs the tokens build automatically before the respective command — the manual step above is just to make the generated CSS available on the first run.)
+`pnpm storybook` (root `package.json`) runs `build:tokens` once and then, via [`concurrently`](https://github.com/open-cli-tools/concurrently), starts both apps' Storybooks in parallel with labeled, color-coded output (`[reka]` / `[shadcn]`):
+
+- ds-reka → http://localhost:6006
+- ds-shadcn → http://localhost:6007
+
+You can also start them one at a time with `pnpm storybook:reka` / `pnpm storybook:shadcn`, or run the tokens build on its own with `pnpm build:tokens` (generates `packages/tokens/dist/css/variables.css`). Each app's own `predev`/`prebuild`/`prestorybook` script already runs the tokens build automatically before that app's command, so this is only needed if you want to (re)generate the CSS on its own.
 
 Each app also runs standalone with `pnpm --filter ds-reka dev` / `pnpm --filter ds-shadcn dev` (Vite dev server, default Vite ports).
