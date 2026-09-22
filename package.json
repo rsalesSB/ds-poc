@@ -1,0 +1,14 @@
+{
+  "name": "ds-poc",
+  "private": true,
+  "version": "0.0.0",
+  "description": "POC comparando dois jeitos de implementar o mesmo design system em Vue: reka-ui direto vs shadcn-vue",
+  "scripts": {
+    "build:tokens": "pnpm --filter @ds-poc/tokens build",
+    "storybook:reka": "pnpm --filter ds-reka storybook",
+    "storybook:shadcn": "pnpm --filter ds-shadcn storybook"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

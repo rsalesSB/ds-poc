@@ -1,0 +1,16 @@
+{
+  "name": "@ds-poc/tokens",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Design tokens compartilhados (Style Dictionary) consumidos por ds-reka e ds-shadcn",
+  "main": "./dist/css/variables.css",
+  "exports": {
+    "./css": "./dist/css/variables.css"
+  },
+  "scripts": {
+    "build": "style-dictionary build --config config.js"
+  },
+  "devDependencies": {
+    "style-dictionary": "4.4.0"
+  }
+}

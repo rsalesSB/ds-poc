@@ -1,0 +1,8 @@
+node_modules/
+dist/
+storybook-static/
+.turbo/
+*.local
+.DS_Store
+.env
+.env.*
