@@ -46,7 +46,7 @@ export const Small: Story = {
   }),
 }
 
-/** Todas as combinações de variant x size lado a lado. */
+/** All variant x size combinations side by side. */
 export const Grid: Story = {
   render: () => ({
     components: { Button },

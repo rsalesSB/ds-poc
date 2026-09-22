@@ -9,10 +9,10 @@ import {
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-// Prop `size` (sm/default) removida: usava data-[size=...] amarrado a
-// dimensões do tema shadcn (h-[18.4px]/w-8 vs h-3.5/w-6) sem equivalente nos
-// tokens do DS. O DS não define um switch pequeno, então mantido tamanho
-// único — igual ao Switch do ds-reka.
+// `size` prop (sm/default) removed: it used data-[size=...] tied to shadcn
+// theme dimensions (h-[18.4px]/w-8 vs h-3.5/w-6) with no equivalent in the
+// DS tokens. The DS doesn't define a small switch, so a single size is
+// kept — same as the ds-reka Switch.
 const props = defineProps<SwitchRootProps & {
   class?: HTMLAttributes['class']
 }>()

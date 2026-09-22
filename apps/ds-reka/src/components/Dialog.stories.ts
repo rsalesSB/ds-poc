@@ -8,8 +8,8 @@ const meta = {
   component: Dialog,
   tags: ['autodocs'],
   args: {
-    title: 'Confirmar ação',
-    description: 'Esta é uma dialog de exemplo do ds-reka, construída sobre reka-ui.',
+    title: 'Confirm action',
+    description: 'This is an example dialog from ds-reka, built on top of reka-ui.',
   },
 } satisfies Meta<typeof Dialog>
 
@@ -23,8 +23,8 @@ export const Closed: Story = {
     setup: () => ({ args }),
     template: `
       <Dialog v-bind="args">
-        <template #trigger><Button size="sm">Abrir dialog</Button></template>
-        <Button variant="secondary" size="sm">Fechar</Button>
+        <template #trigger><Button size="sm">Open dialog</Button></template>
+        <Button variant="secondary" size="sm">Close</Button>
       </Dialog>
     `,
   }),
@@ -37,8 +37,8 @@ export const Open: Story = {
     setup: () => ({ args }),
     template: `
       <Dialog v-bind="args">
-        <template #trigger><Button size="sm">Abrir dialog</Button></template>
-        <Button variant="secondary" size="sm">Fechar</Button>
+        <template #trigger><Button size="sm">Open dialog</Button></template>
+        <Button variant="secondary" size="sm">Close</Button>
       </Dialog>
     `,
   }),

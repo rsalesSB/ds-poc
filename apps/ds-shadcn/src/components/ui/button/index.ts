@@ -3,11 +3,11 @@ import { cva } from 'class-variance-authority'
 
 export { default as Button } from './Button.vue'
 
-// Variantes/tamanhos reduzidos de 6 variants x 8 sizes (default/outline/
+// Variants/sizes trimmed down from 6 variants x 8 sizes (default/outline/
 // secondary/ghost/destructive/link, default/xs/sm/lg/icon/icon-xs/icon-sm/
-// icon-lg) para primary/secondary x sm/md — os únicos combos que o DS define
-// (tokens de cor do shadcn como bg-destructive, text-primary/underline etc.
-// não existem em packages/tokens) — e classes trocadas para os tokens --ds-*.
+// icon-lg) to primary/secondary x sm/md — the only combos the DS defines
+// (shadcn color tokens like bg-destructive, text-primary/underline etc.
+// don't exist in packages/tokens) — and classes swapped for --ds-* tokens.
 export const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md font-regular transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {

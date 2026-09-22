@@ -1,5 +1,5 @@
-// Decisão: mantido como o CLI gerou — os componentes ui/* seguem usando cn()
-// para mesclar variant classes (CVA) com overrides via prop `class`.
+// Decision: kept as the CLI generated it — the ui/* components keep using
+// cn() to merge variant classes (CVA) with overrides via the `class` prop.
 import type { ClassValue } from "clsx"
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"

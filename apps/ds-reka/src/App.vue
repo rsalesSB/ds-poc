@@ -18,11 +18,11 @@ const enabled = ref(false)
 
     <Switch v-model="enabled" />
 
-    <Dialog title="Confirmar ação" description="Esta é uma dialog de exemplo do ds-reka.">
+    <Dialog title="Confirm action" description="This is an example dialog from ds-reka.">
       <template #trigger>
-        <Button variant="primary" size="sm">Abrir dialog</Button>
+        <Button variant="primary" size="sm">Open dialog</Button>
       </template>
-      <Button variant="secondary" size="sm">Fechar</Button>
+      <Button variant="secondary" size="sm">Close</Button>
     </Dialog>
   </main>
 </template>
