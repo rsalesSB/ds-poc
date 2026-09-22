@@ -7,7 +7,7 @@
     "build:tokens": "pnpm --filter @ds-poc/tokens build",
     "storybook:reka": "pnpm --filter ds-reka storybook",
     "storybook:shadcn": "pnpm --filter ds-shadcn storybook",
-    "storybook": "pnpm build:tokens && concurrently -n reka,shadcn -c blue,magenta \"pnpm storybook:reka\" \"pnpm storybook:shadcn\""
+    "storybook": "pnpm build:tokens && concurrently -k -n reka,shadcn -c blue,magenta \"pnpm --filter ds-reka storybook\" \"pnpm --filter ds-shadcn storybook\""
   },
   "devDependencies": {
     "concurrently": "10.0.5"

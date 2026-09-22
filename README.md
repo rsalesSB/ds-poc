@@ -83,3 +83,9 @@ pnpm storybook   # builds the tokens, then starts both Storybooks together
 You can also start them one at a time with `pnpm storybook:reka` / `pnpm storybook:shadcn`, or run the tokens build on its own with `pnpm build:tokens` (generates `packages/tokens/dist/css/variables.css`). Each app's own `predev`/`prebuild`/`prestorybook` script already runs the tokens build automatically before that app's command, so this is only needed if you want to (re)generate the CSS on its own.
 
 Each app also runs standalone with `pnpm --filter ds-reka dev` / `pnpm --filter ds-shadcn dev` (Vite dev server, default Vite ports).
+
+`Ctrl+C` on `pnpm storybook` stops both processes (`concurrently -k` kills the sibling as soon as one exits). If a stale process is ever still holding port 6006/6007 (e.g. `Port 6006 is not available`), find and stop it with:
+
+```bash
+lsof -ti:6006,6007 | xargs kill
+```
