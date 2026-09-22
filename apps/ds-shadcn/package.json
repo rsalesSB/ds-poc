@@ -1,0 +1,30 @@
+{
+  "name": "ds-shadcn",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "predev": "pnpm --filter @ds-poc/tokens build",
+    "dev": "vite",
+    "prebuild": "pnpm --filter @ds-poc/tokens build",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "prestorybook": "pnpm --filter @ds-poc/tokens build",
+    "storybook": "storybook dev -p 6007",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@ds-poc/tokens": "workspace:*",
+    "vue": "^3.5.42"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "^24.13.3",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
+    "tailwindcss": "4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vue-tsc": "^3.3.11"
+  }
+}
