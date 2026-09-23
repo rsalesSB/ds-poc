@@ -10,6 +10,10 @@ import {
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
+// Retokenized: ring-ring/border-ring -> ring-brand-600, text-muted-foreground
+// -> text-neutral-900/60, text-sm -> text-base. group-aria-expanded/...
+// left as-is — aria-expanded is a real, standard attribute AccordionTrigger
+// sets, not one of the dead data-* selectors found in the other components.
 const props = defineProps<AccordionTriggerProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = reactiveOmit(props, 'class')
@@ -22,7 +26,7 @@ const delegatedProps = reactiveOmit(props, 'class')
       v-bind="delegatedProps"
       :class="
         cn(
-          'focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground rounded-md py-4 text-left text-sm font-medium hover:underline focus-visible:ring-3 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 group/accordion-trigger relative flex flex-1 items-start justify-between border border-transparent transition-all outline-none disabled:pointer-events-none disabled:opacity-50',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 **:data-[slot=accordion-trigger-icon]:text-neutral-900/60 rounded-md py-4 text-left text-base font-regular hover:underline **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 group/accordion-trigger relative flex flex-1 items-start justify-between transition-colors disabled:pointer-events-none disabled:opacity-50',
           props.class,
         )
       "
