@@ -1,0 +1,92 @@
+{
+  "componente": "radio-group",
+  "complexidade_prevista": 2,
+  "ds_reka": {
+    "loc": 64,
+    "arquivos": 3,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 64,
+    "api_publica": {
+      "props": [
+        "RadioGroup: modelValue?: string, disabled?: boolean, class?: string",
+        "RadioGroupItem: value: string, disabled?: boolean, class?: string"
+      ],
+      "emits": ["RadioGroup: update:modelValue(value: string)"],
+      "slots": ["RadioGroup: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": [
+      "--ds-color-neutral-300",
+      "--ds-color-brand-600",
+      "--ds-spacing-4"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders two radio items with one selected",
+        "selects a value on click",
+        "moves roving focus with arrow keys and selects with Space",
+        "does not emit when disabled",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "'moves selection with arrow keys' failed on the first try: reka-ui's RadioGroup only moves roving-tabindex focus on ArrowDown/Up/Left/Right, it does NOT auto-select the item like some radiogroup implementations do — confirmed by probing the primitive directly in jsdom. Rewrote the scenario to assert focus-move then a separate Space keypress for selection, instead of assuming arrow-only selection."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Tab entra no grupo, setas movem o foco roving-tabindex, Space seleciona",
+        "foco_retorna_a_origem_ao_fechar": "n/a (sem overlay a fechar)",
+        "roles_aria_corretos": "✅ role=radio por item, aria-checked reflete seleção, group precisa de aria-label/aria-labelledby do consumidor"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 68,
+    "loc_final": 71,
+    "arquivos": 3,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "2 / 41 generated lines in RadioGroupItem.vue ≈ 4.9% (RadioGroup.vue: 0 changes)",
+    "codigo_customizado_loc": 5,
+    "api_publica": {
+      "props": [
+        "RadioGroup: ...RadioGroupRootProps (modelValue, disabled, required, name, orientation, loop, ...) + class",
+        "RadioGroupItem: ...RadioGroupItemProps (value, disabled, id, asChild, as) + class"
+      ],
+      "emits": ["RadioGroup: update:modelValue(value: string)"],
+      "slots": ["RadioGroup: default", "RadioGroupItem: default (overrides the indicator dot)"]
+    },
+    "variantes": 0,
+    "tokens_usados": [
+      "--ds-color-neutral-300",
+      "--ds-color-brand-600",
+      "--ds-spacing-4"
+    ],
+    "residuos_shadcn_removidos": [
+      "border-input / dark:bg-input/30 / aria-invalid:* / destructive ring+border (no dark-mode or destructive tokens in the DS)",
+      "same systemic bug as Checkbox: `data-checked:`/`data-unchecked:` selectors that RadioGroupItem never actually sets (it sets data-state=\"checked\"/\"unchecked\") — fixed with data-[state=checked]:, not just a token rename",
+      "RadioGroup.vue itself needed 0 edits — its only class was the layout-only `grid gap-3 w-full`, no shadcn semantic tokens in it at all"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders two radio items with one selected",
+        "selects a value on click",
+        "moves roving focus with arrow keys and selects with Space",
+        "does not emit when disabled",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Same test file as ds-reka (adjusted import path only); the arrow-key scenario was already written correctly by the time this file was authored, since the ds-reka probe had already revealed reka-ui's real behavior."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Tab entra no grupo, setas movem o foco roving-tabindex, Space seleciona",
+        "foco_retorna_a_origem_ao_fechar": "n/a (sem overlay a fechar)",
+        "roles_aria_corretos": "✅ role=radio por item, aria-checked reflete seleção, group precisa de aria-label/aria-labelledby do consumidor"
+      }
+    }
+  }
+}
