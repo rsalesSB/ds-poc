@@ -1,0 +1,87 @@
+{
+  "componente": "accordion",
+  "complexidade_prevista": 5,
+  "ds_reka": {
+    "loc": 97,
+    "arquivos": 5,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 97,
+    "api_publica": {
+      "props": [
+        "Accordion: type?: 'single' | 'multiple', modelValue?: string | string[], collapsible?: boolean, class?: string",
+        "AccordionItem: value: string, disabled?: boolean",
+        "AccordionTrigger: (no props, just slots)",
+        "AccordionContent: (no props, just slots)"
+      ],
+      "emits": ["Accordion: update:modelValue(value: string | string[])"],
+      "slots": ["Accordion: default", "AccordionItem: default", "AccordionTrigger: default", "AccordionContent: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default",
+        "expands an item on click",
+        "collapses the previous item under type=\"single\" (only one open at a time)",
+        "moves focus between triggers with arrow keys",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas movem o foco entre triggers, Enter/Space expande/colapsa",
+        "foco_retorna_a_origem_ao_fechar": "n/a (conteúdo colapsa in-place, não é um overlay)",
+        "roles_aria_corretos": "✅ trigger é um <button> real com aria-expanded, conteúdo associado corretamente"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 120,
+    "loc_final": 130,
+    "arquivos": 5,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "4 / 120 generated lines ≈ 3.3% (git diff --stat, Accordion.vue/index.ts untouched)",
+    "codigo_customizado_loc": 14,
+    "api_publica": {
+      "props": [
+        "Accordion: ...AccordionRootProps (type, modelValue, collapsible, disabled, dir, orientation) + class",
+        "AccordionItem: ...AccordionItemProps (value, disabled) + class",
+        "AccordionTrigger: ...AccordionTriggerProps + class",
+        "AccordionContent: ...AccordionContentProps + class"
+      ],
+      "emits": ["Accordion: update:modelValue(value: string | string[])"],
+      "slots": ["Accordion: default", "AccordionItem: default", "AccordionTrigger: default, icon (override the chevron)", "AccordionContent: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "data-open:animate-accordion-down / data-closed:animate-accordion-up referenced two custom Tailwind keyframes that only exist when registered in a tailwind.config.js extension — the project has none (Tailwind v4 CSS-first, no @keyframes added to @theme), so these were undefined/no-op utility classes, dropped entirely (content now shows/hides immediately, no slide animation)",
+      "ring-ring/border-ring/text-muted-foreground/text-foreground -> ring-brand-600/text-neutral-900 tokens; not-last:border-b had no color at all (defaulted to Tailwind's built-in gray), added border-neutral-300 explicitly",
+      "group-aria-expanded/accordion-trigger:hidden|inline on the chevron icons left untouched — aria-expanded is a real attribute AccordionTrigger sets, unlike the dead data-checked/data-horizontal selectors found in Checkbox/RadioGroup/Tabs",
+      "Accordion.vue (root) and index.ts needed 0 edits"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default",
+        "expands an item on click",
+        "collapses the previous item under type=\"single\" (only one open at a time)",
+        "moves focus between triggers with arrow keys",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas movem o foco entre triggers, Enter/Space expande/colapsa",
+        "foco_retorna_a_origem_ao_fechar": "n/a (conteúdo colapsa in-place, não é um overlay)",
+        "roles_aria_corretos": "✅ trigger é um <button> real com aria-expanded, conteúdo associado corretamente"
+      }
+    }
+  }
+}
