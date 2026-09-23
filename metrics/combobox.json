@@ -1,0 +1,86 @@
+{
+  "componente": "combobox",
+  "complexidade_prevista": 9,
+  "ds_reka": {
+    "loc": 89,
+    "arquivos": 3,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 89,
+    "api_publica": {
+      "props": ["Combobox: modelValue?: string, placeholder?: string", "ComboboxItem: value: string, disabled?: boolean"],
+      "emits": ["Combobox: update:modelValue(value: string)"],
+      "slots": ["Combobox: default (items), empty", "ComboboxItem: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no listbox in the DOM)",
+        "opens the listbox on typing",
+        "filters the list by typing",
+        "selects a value on click",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "'opens on click' failed on the first try — probed reka-ui's ComboboxRoot directly and found the listbox only opens once you start typing, not on a bare click/focus of the input (aria-expanded stayed 'false' after click, became 'true' after the first keystroke). Rewrote every scenario around typing to open, instead of assuming Select-like click-to-open semantics."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ digitar abre e filtra, setas (não testado explicitamente, herdado do Select) navegam, Enter seleciona",
+        "foco_retorna_a_origem_ao_fechar": "n/a (o input permanece focado, não há elemento de origem separado)",
+        "roles_aria_corretos": "✅ role=combobox no input, role=listbox/option no conteúdo, aria-expanded reflete o estado real"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 479,
+    "loc_final": 482,
+    "arquivos": 18,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "10 / 479 generated lines across combobox+input-group ≈ 2.1% (git diff --stat, 9 of 18 files touched; textarea folder — 1 file, 28 lines — completely untouched and unused)",
+    "codigo_customizado_loc": 13,
+    "api_publica": {
+      "props": [
+        "Combobox: ...ComboboxRootProps (modelValue, multiple, filterFunction, ...)",
+        "ComboboxInput: ...ComboboxInputProps + class",
+        "ComboboxItem: ...ComboboxItemProps (value, disabled, textValue) + class",
+        "InputGroup/InputGroupAddon: class?, align? (used internally by ComboboxInput)"
+      ],
+      "emits": ["Combobox: update:modelValue(value: string)"],
+      "slots": ["Combobox/ComboboxAnchor/ComboboxList/ComboboxViewport/ComboboxItem: default", "ComboboxEmpty: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "FOURTH cn-* broken-class instance: cn-menu-translucent on ComboboxList (same family as DropdownMenuContent/SelectContent/Round 1's Dialog)",
+      "bg-popover/text-popover-foreground/ring-foreground/bg-accent/text-muted-foreground/bg-border/border-input -> neutral tokens across List/Item/Empty/Group/Separator/InputGroup",
+      "outline-hidden (appears throughout the shadcn preset, not a real accessibility improvement over outline-none in this context) -> outline-none, consistent with how it was handled elsewhere",
+      "REAL INCIDENT, not just a leftover: running `add` with -o (--overwrite, required because combobox declares button/input as registryDependencies) reset our already-retokenized button/index.ts and input/Input.vue back to raw shadcn defaults on the first attempt — caught immediately via git status and restored via git checkout before any further work; documented in the raw commit and in the README",
+      "the CLI also pulled in a whole unrelated `textarea` component (1 file, 28 lines) as an incidental registry dependency — not referenced anywhere in combobox's own code, left completely untouched",
+      "an unused InputGroupButton.vue (part of input-group, not used by Combobox) broke the build after this trim: its variant default was 'ghost', a Button variant removed in Round 1 — fixed the default to 'secondary' just to keep the project compiling, since it's dead code otherwise"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no listbox in the DOM)",
+        "opens the listbox on typing",
+        "filters the list by typing",
+        "selects a value on click",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Same test file as ds-reka; the typing-to-open behavior was already known by the time this file was written."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ digitar abre e filtra, Enter seleciona",
+        "foco_retorna_a_origem_ao_fechar": "n/a (mesmo comportamento do ds-reka)",
+        "roles_aria_corretos": "✅ role=combobox/listbox/option, mesmo primitive por baixo do ds-reka"
+      }
+    }
+  }
+}
