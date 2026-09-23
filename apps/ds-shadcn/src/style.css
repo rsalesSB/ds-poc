@@ -11,6 +11,14 @@
  * the components after re-tokenizing), and the oklch
  * background/foreground/card/popover/sidebar/chart/dark-mode variables,
  * which have no equivalent in the DS tokens.
+ *
+ * Note (Round 2): every `npx shadcn-vue add <component>` re-injects this
+ * same scaffolding (font import, tw-animate-css, `@custom-variant dark`, a
+ * `@theme inline { --font-heading }` block, and a `@layer base` rule that
+ * `@apply`s border-border/bg-background/text-foreground — utilities that no
+ * longer resolve to anything since those variables were removed) back into
+ * this file. This is reverted after every `add` for the rest of Round 2,
+ * not re-documented per component.
  */
 @theme {
   --color-brand-600: var(--ds-color-brand-600);
