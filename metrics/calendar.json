@@ -1,0 +1,84 @@
+{
+  "componente": "calendar",
+  "complexidade_prevista": 10,
+  "ds_reka": {
+    "loc": 82,
+    "arquivos": 2,
+    "dependencias_novas": ["@internationalized/date@3.12.4"],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 82,
+    "api_publica": {
+      "props": ["modelValue?: DateValue", "locale?: string"],
+      "emits": ["update:modelValue(value: DateValue)"],
+      "slots": []
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders the selected day as data-selected",
+        "selects a date on click",
+        "moves focus across the grid with arrow keys",
+        "navigates to the next month with the next button",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "First 3 scenarios failed on the first try, all for the same root cause: the grid's <td role=\"gridcell\"> is not the interactive element — a nested <div role=\"button\"> with a full-date aria-label (e.g. \"Monday, January 15, 2024\") is what actually receives clicks/focus and carries data-selected. Also, the grid's own <table> uses role=\"application\", not role=\"grid\" as assumed. Rewrote every scenario to target the inner button by its date label instead of the gridcell — confirmed via a direct probe of the rendered DOM before rewriting."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas movem o foco em 4 direções pelo grid, Enter/Space seleciona, botões prev/next navegam o mês",
+        "foco_retorna_a_origem_ao_fechar": "n/a (não é um overlay)",
+        "roles_aria_corretos": "✅ table role=application, td role=gridcell, day trigger role=button com aria-label de data completa (ex.: \"Monday, January 15, 2024\")"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 452,
+    "loc_final": 358,
+    "arquivos": 13,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "141 / 452 generated lines ≈ 31.2% (git diff --stat, 8 of 13 files touched) — by far the largest trim of Round 2, almost entirely from simplifying Calendar.vue",
+    "codigo_customizado_loc": 47,
+    "api_publica": {
+      "props": [
+        "Calendar: ...CalendarRootProps (modelValue, locale, minValue, maxValue, isDateDisabled, numberOfMonths, ...) — layout/yearRange props removed, see below"
+      ],
+      "emits": ["Calendar: update:modelValue(value: DateValue)"],
+      "slots": []
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "REAL INCIDENT again: `add -o` (required, same registryDependency-on-button reason as combobox) clobbered button/index.ts back to raw shadcn defaults a second time this round — caught via git status, restored via git checkout before continuing, documented in the raw commit",
+      "the month/year native-<select> dropdown picker (layout prop, DefineMonthTemplate/DefineYearTemplate, NativeSelect, yearRange computation — about 100 of Calendar.vue's original 160 lines) dropped entirely — an advanced feature with no DS token backing and not used by this DS's stories, biggest single simplification of Round 2",
+      "FIFTH cn-* broken-class instance: `cn-rtl-flip` on both CalendarPrevButton and CalendarNextButton's chevron icons — not a real Tailwind utility (RTL icon mirroring, out of scope — this DS has no --rtl story)",
+      "'outline' Button variant (removed in Round 1) referenced by Calendar{Prev,Next}Button -> 'secondary'",
+      "'ghost' Button variant (also removed) referenced by CalendarCellTrigger -> rewritten to NOT route through buttonVariants() at all, since a calendar day isn't really a themed Button in this DS's vocabulary — it needs its own hover/today/selected/disabled/unavailable states",
+      "bg-accent/text-accent-foreground/text-muted-foreground/text-destructive-foreground/bg-background -> neutral/brand tokens across Cell/CellTrigger/HeadCell/Heading",
+      "pulled in an unrelated native-select component (5 files) as an incidental registry dependency, same pattern as combobox pulling in textarea — left completely untouched, not referenced by Calendar's own code after the layout-picker removal"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders the selected day as data-selected",
+        "selects a date on click",
+        "moves focus across the grid with arrow keys",
+        "navigates to the next month with the next button",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Same test file as ds-reka; the gridcell-vs-inner-button distinction was already known by the time this file was written."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ mesmo comportamento do ds-reka (mesmo primitive por baixo)",
+        "foco_retorna_a_origem_ao_fechar": "n/a (não é um overlay)",
+        "roles_aria_corretos": "✅ mesmo comportamento do ds-reka"
+      }
+    }
+  }
+}
