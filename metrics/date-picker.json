@@ -1,0 +1,76 @@
+{
+  "componente": "date-picker",
+  "complexidade_prevista": 11,
+  "ds_reka": {
+    "loc": 108,
+    "arquivos": 1,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 108,
+    "api_publica": {
+      "props": ["modelValue?: DateValue"],
+      "emits": ["update:modelValue(value: DateValue)"],
+      "slots": []
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders the segmented field with placeholders when empty",
+        "is closed by default (no calendar in the DOM)",
+        "opens the calendar on trigger click",
+        "selects a date from the calendar and fills the field segments",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "Failed 3 of 5 on the first pass — root cause was a Vue 'Invalid vnode type: undefined' render error, traced to DatePickerPortal not actually existing in reka-ui (checked with `typeof reka['DatePickerPortal']` -> 'undefined', while every other DatePicker* name is a real component). Removed the portal wrapper (DatePickerContent apparently positions itself without one) and the calendar rendered correctly. Two remaining failures were just a fragile getByText(/\\d{4}/) heading query, swapped for a reliable getByRole('button', { name: 'Next page' }) check."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas dentro de um segmento incrementam/decrementam, Tab move entre segmentos, dentro do calendário aberto herda a navegação do Calendar",
+        "foco_retorna_a_origem_ao_fechar": "n/a (não testado explicitamente — o campo permanece editável independente do popover)",
+        "roles_aria_corretos": "✅ role=spinbutton por segmento com aria-valuemin/max/now/text, role=group no field, trigger com aria-haspopup=dialog/aria-expanded"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": null,
+    "loc_final": 51,
+    "arquivos": 2,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": null,
+    "nota_metodologica": "Não há item 'date-picker' no registry do shadcn-vue (confirmado consultando https://shadcn-vue.com/r/index.json — 66 itens, sem date-picker). Não existe portanto `npx shadcn-vue add date-picker` nem commit 'raw CLI output' para este componente — foi escrito diretamente, compondo Popover + Calendar + Button já adicionados (a receita de 'date picker' documentada em toda a comunidade shadcn), então as dimensões de diff-de-CLI (codigo_removido_pct, codigo_customizado_loc, loc_gerado) não se aplicam e ficam null.",
+    "api_publica": {
+      "props": ["modelValue?: DateValue", "placeholder?: string (default 'Pick a date')"],
+      "emits": ["update:modelValue(value: DateValue)"],
+      "slots": []
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [],
+    "divergencia_de_api_real": "Este é o único componente das 12 dimensões onde as duas stacks convergiram para UX genuinamente diferentes, não só implementações diferentes do mesmo padrão: ds-reka usa o DateField segmentado do reka-ui (spinbuttons dia/mês/ano digitáveis, igual a um <input type=date> nativo). ds-shadcn usa a receita da comunidade (Popover + Calendar + Button mostrando a data formatada como texto) — sem campo de texto editável nenhum, só o botão com o rótulo. Não é uma escolha arbitrária: é literalmente a receita que a documentação do ecossistema shadcn recomenda pra este caso, dado que não existe um componente 'DatePicker' registrado.",
+    "testes": {
+      "cenarios_cobertos": [
+        "shows the placeholder when no date is selected",
+        "shows the formatted date when one is selected",
+        "is closed by default (no calendar in the DOM)",
+        "opens the calendar on trigger click and selects a date",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Cenários adaptados ao padrão botão+popover em vez de espelhar literalmente os spinbuttons do ds-reka — os DOIS primeiros cenários (placeholder/formatação) não têm equivalente no ds-reka (lá o campo mostra mm/dd/yyyy, não um placeholder de texto livre), e o ds-reka tem um cenário de spinbutton que não existe aqui. Cobertura funcional equivalente, forma diferente."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Enter/Space no botão abre, dentro do calendário herda a navegação do Calendar",
+        "foco_retorna_a_origem_ao_fechar": "n/a (não testado explicitamente, mesmo comportamento herdado do Popover)",
+        "roles_aria_corretos": "✅ button com o rótulo da data, popover/calendário com os roles já validados nos componentes Popover e Calendar"
+      }
+    }
+  }
+}
