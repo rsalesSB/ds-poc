@@ -1,0 +1,96 @@
+{
+  "componente": "dropdown-menu",
+  "complexidade_prevista": 7,
+  "ds_reka": {
+    "loc": 118,
+    "arquivos": 6,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 118,
+    "api_publica": {
+      "props": [
+        "DropdownMenu: open?: boolean",
+        "DropdownMenuItem: disabled?: boolean",
+        "DropdownMenuCheckboxItem: modelValue?: boolean"
+      ],
+      "emits": [
+        "DropdownMenu: update:open(value: boolean)",
+        "DropdownMenuItem: select(event: Event)",
+        "DropdownMenuCheckboxItem: update:modelValue(value: boolean)"
+      ],
+      "slots": ["DropdownMenu: trigger, default", "DropdownMenuItem/Label/CheckboxItem: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no menu in the DOM)",
+        "opens on trigger click and lists the items",
+        "moves focus between items with arrow keys and skips disabled ones on select",
+        "closes on Escape and returns focus to the trigger",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas navegam a lista, Enter/Space seleciona, item disabled é pulado e marcado aria-disabled",
+        "foco_retorna_a_origem_ao_fechar": "✅ confirmado por teste (toHaveFocus após Escape)",
+        "roles_aria_corretos": "✅ role=menu/menuitem, aria-disabled no item desabilitado"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 386,
+    "loc_final": 389,
+    "arquivos": 15,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "12 / 386 generated lines ≈ 3.1% (git diff --stat, 6 of 15 files touched)",
+    "codigo_customizado_loc": 15,
+    "api_publica": {
+      "props": [
+        "DropdownMenu: ...DropdownMenuRootProps (open, defaultOpen, modal, dir)",
+        "DropdownMenuContent: ...DropdownMenuContentProps (align default start, sideOffset default 4, side, loop, ...) + class",
+        "DropdownMenuItem: ...DropdownMenuItemProps (disabled, textValue, asChild) + inset? + class (variant prop removed, see below)",
+        "DropdownMenuCheckboxItem: ...DropdownMenuCheckboxItemProps (modelValue, disabled, textValue) + class"
+      ],
+      "emits": [
+        "DropdownMenu: update:open(value: boolean)",
+        "DropdownMenuItem: select (from reka-ui, forwarded)",
+        "DropdownMenuCheckboxItem: update:modelValue(value: boolean)"
+      ],
+      "slots": ["DropdownMenu: default", "DropdownMenuTrigger/Content/Item/Label/CheckboxItem: default", "CheckboxItem/RadioItem: indicator-icon (override the check icon)"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "default/destructive DropdownMenuItem variant axis dropped — no destructive token, same trim as Button/DropdownMenuItem",
+      "tw-animate-css-dependent animate-in/out classes on DropdownMenuContent, same as Popover/Tooltip",
+      "another `cn-*` broken-class instance: `cn-menu-translucent` on DropdownMenuContent (same family as `cn-font-heading` on Round 1's Dialog and this round's Popover) — not a real Tailwind utility",
+      "bg-accent/text-accent-foreground/bg-popover/text-popover-foreground/text-muted-foreground/bg-border -> neutral-100/neutral-300/neutral-900 tokens across Content/Item/CheckboxItem/RadioItem/Label/Separator",
+      "data-inset:/data-disabled: selectors left as-is — confirmed real, not the dead-selector bug family: `data-inset` is set by the component itself (:data-inset=\"inset ? '' : undefined\"), and `data-disabled` is the standard reka-ui/Radix convention for disabled state on menu items",
+      "7 of 15 generated files are entirely unused by this DS's stories and were left untouched, not retokenized: DropdownMenuGroup, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger (submenus and keyboard-shortcut hints are out of scope for this DS) — same pattern as Round 1's unused Dialog sub-components"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no menu in the DOM)",
+        "opens on trigger click and lists the items",
+        "moves focus between items with arrow keys and skips disabled ones on select",
+        "closes on Escape and returns focus to the trigger",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas navegam a lista, Enter/Space seleciona, item disabled é pulado e marcado aria-disabled",
+        "foco_retorna_a_origem_ao_fechar": "✅ confirmado por teste (toHaveFocus após Escape)",
+        "roles_aria_corretos": "✅ role=menu/menuitem, aria-disabled no item desabilitado"
+      }
+    }
+  }
+}
