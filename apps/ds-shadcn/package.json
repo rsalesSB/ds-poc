@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ds-poc/tokens": "workspace:*",
+    "@internationalized/date": "3.12.4",
     "@lucide/vue": "^1.47.0",
     "@vueuse/core": "^15.0.0",
     "class-variance-authority": "0.7.1",

@@ -17,6 +17,9 @@ importers:
       '@ds-poc/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@internationalized/date':
+        specifier: 3.12.4
+        version: 3.12.4
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -111,6 +114,9 @@ importers:
       '@ds-poc/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@internationalized/date':
+        specifier: 3.12.4
+        version: 3.12.4
       '@lucide/vue':
         specifier: ^1.47.0
         version: 1.47.0(vue@3.5.43(typescript@6.0.3))
