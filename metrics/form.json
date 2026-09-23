@@ -1,0 +1,81 @@
+{
+  "componente": "form",
+  "complexidade_prevista": 12,
+  "nota_metodologica": "Diferente dos outros 11, Form não é um primitive comportamental do reka-ui — mede volume de glue code de integração vee-validate+zod (schema de validação, estado de erro por campo, submit), não composição de acessibilidade. Ver metrics/complexity-ranking-predicted.md.",
+  "ds_reka": {
+    "loc": 61,
+    "arquivos": 2,
+    "dependencias_novas": ["vee-validate@4.15.1", "@vee-validate/zod@4.15.1", "zod@3.25.76"],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 61,
+    "api_publica": {
+      "props": [],
+      "emits": ["submit(values: { email: string, password: string, rememberMe: boolean })"],
+      "slots": []
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-color-brand-700", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "shows validation errors when submitting empty",
+        "submits valid values",
+        "toggles remember me via the label",
+        "supports keyboard-only submission (Tab through fields, Enter to submit)",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "2 of 5 failed on the first try: (1) the schema's plain z.string().email(...) message only applies to the format check, not the empty/undefined case, which falls back to zod's generic 'Required' — fixed by adding explicit required_error messages; (2) 'submits valid values' failed because vee-validate's handleSubmit validates asynchronously even against a synchronous zod schema — the emit lands a tick after the click, confirmed by isolating a raw form (no vee-validate) where the same click->emit pattern was synchronous. Needed an explicit waitFor(), not just `await user.click`."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Tab entre campos, Enter no botão focado submete, label do checkbox clicável",
+        "foco_retorna_a_origem_ao_fechar": "n/a (não há overlay)",
+        "roles_aria_corretos": "✅ label associado via for/id, erros como texto simples ao lado do campo (sem aria-describedby ligando erro ao input — ver checklist do ds-shadcn pra contraste)"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 177,
+    "loc_final": 179,
+    "arquivos": 10,
+    "dependencias_novas": ["vee-validate@4.15.1", "@vee-validate/zod@4.15.1", "zod@3.25.76"],
+    "codigo_removido_pct": "4 / 177 generated lines across form+label ≈ 2.3% (git diff --stat, 4 of 10 files touched)",
+    "codigo_customizado_loc": 6,
+    "codigo_glue_autoral": "login-schema.ts (13 lines, identical to ds-reka's) + login-form/LoginForm.vue (60 lines) — the actual login example, not part of the CLI-generated form/label primitives measured above",
+    "api_publica": {
+      "props": [],
+      "emits": ["LoginForm: submit(values: { email: string, password: string, rememberMe: boolean })"],
+      "slots": ["FormField: componentField/value+handleChange (vee-validate's own slot API)"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-color-brand-700", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "text-destructive (no destructive token) -> brand-700 on FormLabel's error state and FormMessage, same color ds-reka's plain error <p> uses",
+      "text-muted-foreground -> neutral-900/60 on FormDescription (unused by this DS's LoginForm, no description shown, but retokenized for consistency since it's part of the same folder)",
+      "FormControl.vue, FormItem.vue, injectionKeys.ts, and useFormField.ts needed 0 edits — no shadcn color classes in any of them, they're pure vee-validate/ARIA wiring"
+    ],
+    "vantagem_real_do_pronto": "This is the one component where the CLI-generated code provides something ds-reka has to hand-roll from scratch: FormControl auto-wires aria-describedby/aria-invalid between the input and its error message via useFormField's generated ids (formItemId/formDescriptionId/formMessageId) — ds-reka's LoginForm has no equivalent wiring (its error <p> is just visually adjacent to the input, not aria-linked to it). That's a real accessibility gap in the ds-reka version this round didn't need to close to pass its own test suite (axe didn't flag it, since a visually-adjacent error text isn't itself a violation), but it's a genuine, measurable difference in how complete the two versions are.",
+    "testes": {
+      "cenarios_cobertos": [
+        "shows validation errors when submitting empty",
+        "submits valid values",
+        "toggles remember me via the label",
+        "supports keyboard-only submission (Tab through fields, Enter to submit)",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Same test file as ds-reka; the required_error and waitFor lessons were already known by the time this file was written."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Tab entre campos, Enter no botão focado submete, label do checkbox clicável",
+        "foco_retorna_a_origem_ao_fechar": "n/a (não há overlay)",
+        "roles_aria_corretos": "✅ MELHOR que o ds-reka aqui: FormControl liga input<->erro via aria-describedby/aria-invalid automaticamente (gerado pelo useFormField), algo que o ds-reka não replicou"
+      }
+    }
+  }
+}
