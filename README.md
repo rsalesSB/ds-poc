@@ -89,3 +89,106 @@ Each app also runs standalone with `pnpm --filter ds-reka dev` / `pnpm --filter 
 ```bash
 lsof -ti:6006,6007 | xargs kill
 ```
+
+---
+
+# Round 2 — scale test (12 more components, 10 dimensions)
+
+Round 1 (above) compared Button/Switch/Dialog and suggested a hypothesis: *complexity ↑ → shadcn-vue's initial speed advantage ↑*. With only 3 components that wasn't really testable. Round 2 scales to 12 more — Checkbox, RadioGroup, Tooltip, Tabs, Accordion, Popover, DropdownMenu, Select, Combobox, Calendar, DatePicker, Form — and records 10 dimensions per component/stack in `metrics/*.json`, to test that hypothesis against real data.
+
+The **predicted complexity ranking** (`metrics/complexity-ranking-predicted.md`) was written and committed *before* any Round 2 component code, specifically so this comparison isn't biased by hindsight. Each `metrics/<component>.json` follows the exact schema requested, with a small generator script (`metrics/generate-report.mjs`) that reads all 12 files and regenerates the raw table/correlation/ASCII scatter below — so these numbers can't drift from the underlying data.
+
+## What's new in the setup
+
+- **Test harness**: a second Vitest project (`unit`, jsdom) alongside the existing `storybook` browser project, using `@testing-library/vue` + `@testing-library/user-event` + `vitest-axe`. `@testing-library/vue`'s auto-cleanup only registers when it detects jest/vitest globals on `globalThis` (which this project doesn't enable), so `afterEach(cleanup)` is wired explicitly in each app's `src/test/setup.ts` — without it, every test after the first in a file saw leftover DOM nodes from earlier tests. `vitest-axe`'s own `toHaveNoViolations()` matcher targets an older `Vi.Assertion` shape incompatible with vitest 5's type signature, so a11y checks assert on `axe(container).violations` directly instead. jsdom also has neither `ResizeObserver` nor the Pointer Capture methods, both needed by reka-ui's positioning — stubbed once, in the same setup file.
+- **`@internationalized/date`** pinned to the same version (`3.12.4`) in both apps *before* touching Calendar/DatePicker — it's already a `reka-ui` dependency, so it's the same date engine in both stacks by construction, not a choice either side made independently.
+- **`zod` pinned to `3.25.76`** (not v4) in both apps: `@vee-validate/zod` requires `zod: ^3.24.0`. Confirmed independently: when the CLI added `form`, it pulled in `zod@3.25.76` on its own — the exact version already pinned by hand for ds-reka.
+- **`Input`** (email/password fields) was built as a small prerequisite for Form in both stacks — it isn't one of the 12 tracked components (no `metrics/input.json`), since Form's brief assumed it already existed.
+
+## Real findings from running the actual CLI 12 more times
+
+- **`shadcn-vue@latest` (2.8.2) still has the exact registry-fetch bug found in Round 1** — retested at the start of Round 2 (Checkbox) and it failed the same way a third time. Every `add` in Round 2 used `shadcn-vue@2.6.2` directly, without re-testing `@latest` each time.
+- **A systemic dead-selector bug across the "vega" style preset**: several generated components use Tailwind boolean-attribute selectors (`data-checked:`, `data-horizontal:`) that never match anything, because the underlying reka-ui primitives expose that state as a *value* attribute instead (`data-state="checked"`, `data-orientation="horizontal"`). Confirmed by rendering each primitive directly and inspecting its real DOM output, not by assumption. Found on: **Checkbox** (`data-checked:`/`data-unchecked:`), **RadioGroup** (same), **Tabs** (`data-horizontal:`/`group-data-horizontal/vertical:` for orientation — inverted for `Tabs.vue`'s root wrapper, where the fix is `data-[orientation=vertical]:flex-col`, not `[orientation=horizontal]`). Not every boolean-looking selector was affected — `data-active`/`data-inset`/`data-disabled`/`data-placeholder` were each confirmed real (the components or reka-ui itself do set them as bare attributes) before being left alone.
+- **A `cn-*` family of broken/placeholder classes**, none of them valid Tailwind utilities: `cn-font-heading` (found again this round, on Popover's title — first found on Round 1's Dialog), `cn-menu-translucent` (DropdownMenuContent, SelectContent, ComboboxList — three separate components), `cn-rtl-flip` (Calendar's prev/next chevrons). Five confirmed instances total across both rounds, all silently dead on arrival, all removed.
+- **The CLI re-injects its own theme into `src/style.css` on every single `add`** (Inter font import, `tw-animate-css`, a `@theme inline { --font-heading }` block, a `@layer base` rule `@apply`-ing utilities that no longer resolve to anything) — reverted via `git checkout` after every `add` from Checkbox onward, documented once instead of per component.
+- **Running `add` with `-o`/`--overwrite` (required whenever a new component declares `button` or `input` as a registryDependency, since those files already exist and the CLI otherwise just prompts and aborts) reset our already-retokenized `button/index.ts`/`input/Input.vue` back to raw shadcn defaults, twice** (Combobox, Calendar) — caught immediately via `git status` both times and restored via `git checkout` before continuing. This is a real, reproducible risk of running `shadcn-vue add -o` against a project with hand-edited files, not a one-off mistake.
+- **No `date-picker` registry item exists** (checked `https://shadcn-vue.com/r/index.json`, 66 entries — `accordion`/`calendar`/`checkbox`/`combobox`/`dropdown-menu`/`form`/`popover`/`radio-group`/`range-calendar`/`select`/`tabs`/`tooltip` all present, `date-picker` isn't). ds-shadcn's DatePicker is composed by hand from already-added Popover + Calendar + Button, following the community recipe — no CLI add, no raw commit, `codigo_removido_pct`/`codigo_customizado_loc` are `null` for that one component in `metrics/date-picker.json`, documented there rather than silently left out.
+- **`DatePickerPortal` doesn't exist in reka-ui** (every other `DatePicker*` name does — confirmed with `typeof reka['DatePickerPortal']` → `'undefined'`). `DatePickerContent` positions itself without a separate portal wrapper, unlike Popover/Dialog/Tooltip. Found the hard way: a `Vue warn: Invalid vnode type: undefined` error while writing ds-reka's DatePicker test.
+- **`reka-ui`'s Calendar renders each day as a `role="button"` div nested inside a `role="gridcell"` `<td>`, and the month table itself is `role="application"`, not `role="grid"`** — clicking/focusing the `<td>` does nothing; every interaction targets the inner button by its full-date `aria-label` (e.g. `"Monday, January 15, 2024"`).
+- **`reka-ui`'s Tooltip content renders `aria-hidden="true"` and is instead exposed via `aria-describedby` on the trigger** — a valid WAI-ARIA pattern, but it means Testing Library's default role queries (which exclude `aria-hidden` nodes) need `{ hidden: true }` to find it.
+- **`reka-ui`'s Combobox only opens its listbox on typing, not on a bare click/focus** — unlike Select, which opens immediately. Confirmed by probing the primitive directly (`aria-expanded` stayed `false` after click, became `true` after the first keystroke).
+- **`reka-ui`'s RadioGroup and Tabs both emit a value change from arrow-key navigation that doesn't fully match a naive assumption**: RadioGroup's arrow keys only move roving-tabindex focus (Space still required to select); Tabs' automatic-activation mode can emit `update:modelValue` more than once for a single click (focus alone selects under that mode).
+- **`vee-validate`'s `handleSubmit` validates asynchronously even against a synchronous `zod` schema** — the `submit` emit lands a tick after the click event resolves. Confirmed by isolating a raw `<form>` with no vee-validate, where the same click→emit pattern was synchronous. Needed `waitFor()`, not just `await user.click(...)`.
+
+All of the above were found by actually running the code and probing real DOM output — not assumed from documentation — which is the entire point of measuring this by building it rather than estimating it.
+
+## Round 2 — raw data table
+
+| Component | Predicted rank | ds-reka LOC | ds-shadcn LOC (generated → final) | ds-shadcn removed % | ds-shadcn custom LOC | ds-reka test needed a fix | axe violations |
+|---|---|---|---|---|---|---|---|
+| Checkbox | 1 | 53 | 43 → 53 | 2.4% | 9 | no | 0 / 0 |
+| RadioGroup | 2 | 64 | 68 → 71 | 4.9% | 5 | **yes** | 0 / 0 |
+| Tooltip | 3 | 43 | 82 → 91 | 5.9% | 7 | **yes** | 0 / 0 |
+| Tabs | 4 | 72 | 128 → 116 | 24.2% | 19 | **yes** | 0 / 0 |
+| Accordion | 5 | 97 | 120 → 130 | 3.3% | 14 | no | 0 / 0 |
+| Popover | 6 | 42 | 152 → 158 | 2.6% | 10 | no | 0 / 0 |
+| DropdownMenu | 7 | 118 | 386 → 389 | 3.1% | 15 | no | 0 / 0 |
+| Select | 8 | 87 | 308 → 311 | 4.5% | 17 | no | 0 / 0 |
+| Combobox | 9 | 89 | 479 → 482 | 2.1% | 13 | **yes** | 0 / 0 |
+| Calendar | 10 | 82 | 452 → 358 | 31.2% | 47 | **yes** | 0 / 0 |
+| DatePicker | 11 | 108 | n/a (no registry item) → 51 | n/a | n/a | **yes** | 0 / 0 |
+| Form | 12 | 61 | 177 → 179 | 2.3% | 6 | **yes** | 0 / 0 |
+
+"ds-reka test needed a fix" means at least one test scenario failed on the first attempt and had to be rewritten after discovering real primitive behavior (documented per component above and in each `metrics/*.json`'s `testes.nota`). **ds-shadcn's column is omitted on purpose**: every ds-shadcn test was written *after* its ds-reka twin, using the exact same underlying reka-ui primitive, so it always benefited from lessons already learned — a "0 fixes needed" count there would measure test-writing order, not a real shadcn-vue advantage. That's a genuine limitation of this measurement, not a result.
+
+Full generator output (raw pairs, LOC-generated including files not shown above, etc.) is reproducible with:
+
+```bash
+node metrics/generate-report.mjs
+```
+
+## Testing the hypothesis: does complexity predict shadcn's initial advantage?
+
+Using `codigo_removido_pct` (ds-shadcn) as the proxy for "how much survived unedited" — plotted against the predicted complexity rank, excluding Form (different axis, see below) and DatePicker (no CLI baseline to diff against):
+
+```
+ 35% |                                
+ 30% |                            *   
+ 25% |                                
+ 20% |          *                     
+ 15% |                                
+ 10% |                                
+  5% |       *                        
+  0% | *  *        *  *  *  *  *      
+     +---------------------------------
+        1  2  3  4  5  6  7  8  9 10 11
+        (predicted complexity rank, 1=simplest .. 11=most complex, Form excluded)
+```
+
+**n = 10, Pearson r ≈ 0.30.** A weak positive correlation — not the clear, monotonic relationship the hypothesis predicts, and it doesn't survive removing its two outliers (Tabs at rank 4, Calendar at rank 10). Looking at *why* those two are outliers is the actual finding: their high removed-% isn't from fixing broken complex behavior — it's from us **deliberately trimming scope** the CLI generates but this minimal DS doesn't need (Tabs' default/line variant axis, Calendar's entire month/year `<select>` picker, ~100 of its 160 generated lines). Every other component's removed-% clusters tightly at 2–6%, regardless of whether it's Checkbox (rank 1) or Combobox (rank 9) — the actual *bug-fixing/retokenizing* effort (swapping color classes, fixing dead selectors) stays roughly **constant** across complexity, while the *scope-trimming* effort spikes independently of complexity, driven by how much optional surface area a given component's CLI output happens to include.
+
+So: **the hypothesis as stated isn't supported by this proxy.** A more accurate one, given this data: *complexity doesn't predict how much retokenizing work survives unedited — the CLI's default output breadth does, and that's only loosely related to how behaviorally complex a component is.* Round 1's Dialog (11 files, most unused) already hinted at this; Round 2's Tabs and Calendar confirm it as a pattern, not a one-off.
+
+## Form: a different question entirely
+
+Form is scored last (12) but not because it's the hardest accessibility composition in the set — Combobox and DatePicker are harder in that sense. reka-ui has **no Form primitive at all**; ds-reka's version is `vee-validate`'s `useForm` + `@vee-validate/zod`'s schema resolver, wired by hand around the already-built Input/Checkbox/Button. Position 12 measures **integration/validation glue-code volume**, not primitive-composition difficulty, and it's kept out of the correlation above for that reason.
+
+Here the result actually does favor shadcn-vue, but not for the same reason Switch/Dialog did in Round 1. The CLI's `form` registry item provides `FormField`/`FormItem`/`FormControl`/`FormLabel`/`FormMessage`, which auto-wire `aria-describedby`/`aria-invalid` between each input and its error message via generated ids (`useFormField`'s `formItemId`/`formDescriptionId`/`formMessageId`). ds-reka's hand-rolled version never replicated that wiring — its error `<p>` is only *visually* adjacent to the input, not `aria`-linked to it. Both versions passed their own axe checks (0 violations), because a visually-adjacent, unlinked error message isn't itself flagged by automated tooling — but it's a real, measurable difference in how complete the two versions are, and it's the kind of gap that's easy to miss without deliberately building both by hand and comparing.
+
+## Components that blew past the expected effort
+
+Being honest about where the *actual* time went, beyond what the LOC/percentage columns show:
+
+- **Calendar** — the single biggest edit of Round 2 (31.2% of generated lines changed) came from a *design* decision (drop the month/year dropdown picker), not from fixing something broken — that decision took real time to make and justify, separate from the mechanical retokenizing. On top of that, understanding why `getByRole('gridcell')` clicks did nothing (the real target is a nested button) took a dedicated probing pass.
+- **Combobox and Calendar both hit the `add -o` overwrite incident** (see "Real findings" above) — an unplanned, CLI-infrastructure-level detour that cost real time and wasn't predicted by anything in the complexity ranking, since it has nothing to do with either component's own behavior.
+- **DatePicker** — reverse-engineering that `DatePickerPortal` doesn't exist (via a runtime `typeof` check across every `DatePicker*` export) took longer than writing the component itself once the fix was known.
+- **Tabs** ended up with a smaller final component (116 lines) than its generated input (128), the only component in Round 2 where that happened — almost entirely because of the variant-axis trim, again a scope decision rather than a bug fix.
+
+## Running the new tests
+
+```bash
+pnpm --filter ds-reka test     # vitest --project=unit run
+pnpm --filter ds-shadcn test
+pnpm test                      # both, from the root
+```
+
