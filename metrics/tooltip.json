@@ -1,0 +1,84 @@
+{
+  "componente": "tooltip",
+  "complexidade_prevista": 3,
+  "ds_reka": {
+    "loc": 43,
+    "arquivos": 1,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 43,
+    "api_publica": {
+      "props": ["open?: boolean", "delayDuration?: number"],
+      "emits": ["update:open(value: boolean)"],
+      "slots": ["trigger", "default (tooltip body)"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-900", "--ds-color-neutral-100", "--ds-radius-md", "--ds-spacing-3"],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no content in the DOM)",
+        "opens on trigger focus and links content via aria-describedby",
+        "closes on Escape and keeps focus on the trigger",
+        "opens on hover",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "Failed twice before passing, both times on real environment gaps rather than bugs in our code: (1) jsdom has no ResizeObserver, which reka-ui's size tracking calls on mount — added a stub in src/test/setup.ts (shared infra fix, not tooltip-specific); (2) the tooltip content renders with aria-hidden=\"true\" and is instead exposed via aria-describedby on the trigger (a valid WAI-ARIA pattern), so Testing Library's default role query — which excludes aria-hidden nodes — never found it until switched to getByRole('tooltip', { hidden: true })."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Tab abre no foco, Escape fecha e devolve o foco ao trigger",
+        "foco_retorna_a_origem_ao_fechar": "✅ confirmado por teste (toHaveFocus após Escape)",
+        "roles_aria_corretos": "✅ role=tooltip (aria-hidden, ligado via aria-describedby no trigger) — padrão intencional, não um bug"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 82,
+    "loc_final": 91,
+    "arquivos": 5,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "2 / 34 generated lines in TooltipContent.vue ≈ 5.9% (Tooltip.vue/TooltipProvider.vue/TooltipTrigger.vue: 0 changes)",
+    "codigo_customizado_loc": 7,
+    "api_publica": {
+      "props": [
+        "Tooltip: ...TooltipRootProps (open, defaultOpen, delayDuration, disableHoverableContent, disableClosingTrigger)",
+        "TooltipContent: ...TooltipContentProps (side, sideOffset default 0, align, ...) + class",
+        "TooltipProvider: ...TooltipProviderProps (delayDuration default 0, skipDelayDuration, disableHoverableContent)",
+        "TooltipTrigger: ...TooltipTriggerProps (asChild, as)"
+      ],
+      "emits": ["Tooltip: update:open(value: boolean)"],
+      "slots": ["Tooltip: default", "TooltipTrigger: default", "TooltipContent: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-900", "--ds-color-neutral-100", "--ds-radius-md", "--ds-spacing-3"],
+    "residuos_shadcn_removidos": [
+      "data-open:animate-in/data-closed:animate-out/data-[side=*]:slide-in-from-* classes (depended on tw-animate-css, already removed from the project)",
+      "has-data-[slot=kbd]:pr-1.5 / **:data-[slot=kbd]:* keyboard-shortcut-hint styling (out of scope, no Kbd component in this DS)",
+      "bg-foreground/text-background (shadcn's inverted-theme semantic tokens, no equivalent in the DS) -> neutral-900/neutral-100",
+      "Tooltip.vue, TooltipProvider.vue, and TooltipTrigger.vue needed 0 edits — none of them carry any shadcn color/theme classes, only TooltipContent.vue does"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no content in the DOM)",
+        "opens on trigger focus and links content via aria-describedby",
+        "closes on Escape and keeps focus on the trigger",
+        "opens on hover",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Same test file as ds-reka (adjusted for the compound Tooltip/TooltipTrigger/TooltipContent/TooltipProvider API instead of a single wrapper component with a trigger slot); the ResizeObserver stub and aria-hidden handling were already known by the time this file was written."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Tab abre no foco, Escape fecha e devolve o foco ao trigger",
+        "foco_retorna_a_origem_ao_fechar": "✅ confirmado por teste (toHaveFocus após Escape)",
+        "roles_aria_corretos": "✅ role=tooltip (aria-hidden, ligado via aria-describedby no trigger) — mesmo comportamento do reka-ui, já que é o mesmo primitive por baixo"
+      }
+    }
+  }
+}
