@@ -1,0 +1,88 @@
+{
+  "componente": "tabs",
+  "complexidade_prevista": 4,
+  "ds_reka": {
+    "loc": 72,
+    "arquivos": 4,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 72,
+    "api_publica": {
+      "props": [
+        "Tabs: modelValue?: string, class?: string",
+        "TabsTrigger: value: string, disabled?: boolean",
+        "TabsContent: value: string"
+      ],
+      "emits": ["Tabs: update:modelValue(value: string)"],
+      "slots": ["Tabs: list, default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-300", "--ds-color-neutral-100", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-lg", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "shows the selected tab panel",
+        "selects a tab on click",
+        "moves roving focus with arrow keys and activates automatically",
+        "skips a disabled tab",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": false,
+      "nota": "'selects a tab on click' failed on the first try: reka-ui's Tabs emits update:modelValue more than once for a single click (focus lands on the trigger, which alone selects it under the default automatic-activation mode). Not a bug — adjusted the assertion to check every emission carries the correct value instead of expecting exactly one call."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas movem o foco roving-tabindex e ativam automaticamente (modo automatic-activation)",
+        "foco_retorna_a_origem_ao_fechar": "n/a (sem overlay a fechar)",
+        "roles_aria_corretos": "✅ role=tablist/tab/tabpanel, aria-selected e aria-labelledby corretos"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 128,
+    "loc_final": 116,
+    "arquivos": 5,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "31 / 128 generated lines ≈ 24.2% (git diff --stat, all 5 files touched)",
+    "codigo_customizado_loc": 19,
+    "api_publica": {
+      "props": [
+        "Tabs: ...TabsRootProps (modelValue, defaultValue, orientation, activationMode, dir) + class",
+        "TabsList: ...TabsListProps + class (variant prop removed, see below)",
+        "TabsTrigger: ...TabsTriggerProps (value, disabled, asChild, as) + class",
+        "TabsContent: ...TabsContentProps (value, forceMount) + class"
+      ],
+      "emits": ["Tabs: update:modelValue(value: string)"],
+      "slots": ["Tabs: default", "TabsList: default", "TabsTrigger: default", "TabsContent: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-300", "--ds-color-neutral-100", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-lg", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "default/line TabsList variant axis dropped — 'line' (underlined, transparent) has no token equivalent in the DS, same simplification as Button's variant trim",
+      "TWO more instances of the same dead-selector bug family found in Checkbox/RadioGroup, but inverted this time: `data-horizontal:flex-col` on Tabs.vue and `group-data-horizontal/tabs:h-9`/`group-data-vertical/tabs:*` in tabsListVariants never matched anything — TabsRoot exposes orientation as data-orientation=\"horizontal\"/\"vertical\" (a value attribute), not boolean data-horizontal/data-vertical flags (confirmed by rendering it) — fixed to data-[orientation=...]:. Note: `data-active:` on TabsTrigger is NOT dead — reka-ui does set a genuine boolean data-active attribute on the active trigger alongside data-state=\"active\", confirmed by the same probe, so that selector was left as-is.",
+      "text-foreground/60, text-muted-foreground, bg-muted, bg-background, border-input, dark:* — all replaced with neutral-900/neutral-100/neutral-300",
+      "the redundant `:data-orientation=\"forwarded.orientation || 'horizontal'\"` binding on Tabs.vue's TabsRoot was left in place (harmless — TabsRoot already sets the same attribute natively) rather than removed, since removing it wasn't necessary for correctness"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "shows the selected tab panel",
+        "selects a tab on click",
+        "moves roving focus with arrow keys and activates automatically",
+        "skips a disabled tab",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true,
+      "nota": "Same test file as ds-reka (compound TabsList/TabsTrigger/TabsContent API instead of named slots); the double-emission-on-click quirk was already known by the time this file was written."
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ setas movem o foco roving-tabindex e ativam automaticamente (modo automatic-activation)",
+        "foco_retorna_a_origem_ao_fechar": "n/a (sem overlay a fechar)",
+        "roles_aria_corretos": "✅ role=tablist/tab/tabpanel, aria-selected e aria-labelledby corretos"
+      }
+    }
+  }
+}
