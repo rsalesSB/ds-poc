@@ -1,0 +1,83 @@
+{
+  "componente": "popover",
+  "complexidade_prevista": 6,
+  "ds_reka": {
+    "loc": 42,
+    "arquivos": 1,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 42,
+    "api_publica": {
+      "props": ["open?: boolean", "title?: string", "description?: string"],
+      "emits": ["update:open(value: boolean)"],
+      "slots": ["trigger", "default (popover body)"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md", "--ds-font-size-heading"],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no content in the DOM)",
+        "opens on trigger click",
+        "closes on Escape and returns focus to the trigger",
+        "closes when clicking outside",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Enter/Space abre, Escape fecha",
+        "foco_retorna_a_origem_ao_fechar": "✅ confirmado por teste (toHaveFocus após Escape)",
+        "roles_aria_corretos": "✅ dialog não-modal via reka-ui, foco não é preso (não é modal por padrão, ao contrário do Dialog da Rodada 1)"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 152,
+    "loc_final": 158,
+    "arquivos": 8,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "4 / 152 generated lines ≈ 2.6% (git diff --stat, Popover.vue/PopoverAnchor.vue/PopoverTrigger.vue/index.ts untouched)",
+    "codigo_customizado_loc": 10,
+    "api_publica": {
+      "props": [
+        "Popover: ...PopoverRootProps (open, defaultOpen, modal)",
+        "PopoverContent: ...PopoverContentProps (align default center, sideOffset default 4, side, ...) + class",
+        "PopoverTrigger/PopoverAnchor: ...their reka-ui props",
+        "PopoverHeader/PopoverTitle/PopoverDescription: class? (plain divs/p, no reka-ui primitive underneath)"
+      ],
+      "emits": ["Popover: update:open(value: boolean)"],
+      "slots": ["Popover: default", "PopoverTrigger/PopoverContent/PopoverHeader/PopoverTitle/PopoverDescription: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md", "--ds-font-size-heading"],
+    "residuos_shadcn_removidos": [
+      "same tw-animate-css-dependent data-open:animate-in/data-closed:animate-out/data-[side=*]:slide-in-from-* classes as Tooltip, dropped",
+      "bg-popover/text-popover-foreground/ring-foreground -> bg-neutral-100/text-neutral-900/border-neutral-300",
+      "SAME cn-font-heading broken class as Round 1's Dialog, found again on PopoverTitle.vue — not a valid Tailwind utility, fixed to text-heading font-bold",
+      "text-muted-foreground -> text-neutral-900/70 (PopoverDescription)",
+      "Popover.vue, PopoverAnchor.vue, PopoverTrigger.vue, and index.ts needed 0 edits — a PopoverAnchor sub-component exists (for anchoring the popover to a different element than its trigger) but isn't used in this DS's stories"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "is closed by default (no content in the DOM)",
+        "opens on trigger click",
+        "closes on Escape and returns focus to the trigger",
+        "closes when clicking outside",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Enter/Space abre, Escape fecha",
+        "foco_retorna_a_origem_ao_fechar": "✅ confirmado por teste (toHaveFocus após Escape)",
+        "roles_aria_corretos": "✅ dialog não-modal via reka-ui, mesmo comportamento do ds-reka (mesmo primitive por baixo)"
+      }
+    }
+  }
+}
