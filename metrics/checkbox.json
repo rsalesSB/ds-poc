@@ -1,0 +1,92 @@
+{
+  "componente": "checkbox",
+  "complexidade_prevista": 1,
+  "ds_reka": {
+    "loc": 53,
+    "arquivos": 2,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 53,
+    "api_publica": {
+      "props": ["modelValue?: boolean", "disabled?: boolean", "class?: string"],
+      "emits": ["update:modelValue(value: boolean)"],
+      "slots": []
+    },
+    "variantes": 0,
+    "tokens_usados": [
+      "--ds-radius-sm",
+      "--ds-color-neutral-300",
+      "--ds-color-neutral-100",
+      "--ds-color-brand-600",
+      "--ds-spacing-4"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders unchecked by default",
+        "selects a value on click",
+        "toggles via keyboard (Tab then Space)",
+        "does not emit when disabled",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅",
+        "foco_retorna_a_origem_ao_fechar": "n/a (sem overlay a fechar)",
+        "roles_aria_corretos": "✅ role=checkbox, aria-checked reflete o estado"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 43,
+    "loc_final": 53,
+    "arquivos": 2,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "1 / 42 generated lines in Checkbox.vue ≈ 2.4% (git diff --stat c812d42..final)",
+    "codigo_customizado_loc": 9,
+    "api_publica": {
+      "props": [
+        "...CheckboxRootProps (modelValue, defaultValue, disabled, required, name, value, id, asChild, as)",
+        "class?: HTMLAttributes['class']"
+      ],
+      "emits": ["update:modelValue(value: boolean | 'indeterminate')"],
+      "slots": ["default (overrides the indicator's check icon, receives slotProps)"]
+    },
+    "variantes": 0,
+    "tokens_usados": [
+      "--ds-radius-sm",
+      "--ds-color-neutral-300",
+      "--ds-color-neutral-100",
+      "--ds-color-brand-600",
+      "--ds-spacing-4"
+    ],
+    "residuos_shadcn_removidos": [
+      "dark:bg-input/30 and all dark: variants (no dark-mode tokens in the DS)",
+      "aria-invalid:* / destructive ring+border classes (no destructive token in the DS)",
+      "border-input / bg-primary / text-primary-foreground / border-primary shadcn semantic classes",
+      "BUG FOUND, not just a token swap: the generated classes used `data-checked:`/`data-unchecked:` selectors, but CheckboxRoot actually renders `data-state=\"checked\"|\"unchecked\"` (confirmed by rendering it directly in a jsdom probe) — the generated checked-state styling never matched anything and was silently dead on arrival"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "renders unchecked by default",
+        "selects a value on click",
+        "toggles via keyboard (Tab then Space)",
+        "does not emit when disabled",
+        "has no obvious a11y violations"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅",
+        "foco_retorna_a_origem_ao_fechar": "n/a (sem overlay a fechar)",
+        "roles_aria_corretos": "✅ role=checkbox, aria-checked reflete o estado"
+      }
+    }
+  }
+}
