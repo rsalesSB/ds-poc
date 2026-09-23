@@ -1,0 +1,87 @@
+{
+  "componente": "select",
+  "complexidade_prevista": 8,
+  "ds_reka": {
+    "loc": 87,
+    "arquivos": 3,
+    "dependencias_novas": [],
+    "codigo_removido_pct": null,
+    "codigo_customizado_loc": 87,
+    "api_publica": {
+      "props": [
+        "Select: modelValue?: string, placeholder?: string, disabled?: boolean",
+        "SelectItem: value: string, disabled?: boolean"
+      ],
+      "emits": ["Select: update:modelValue(value: string)"],
+      "slots": ["Select: default (items)", "SelectItem: default"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "testes": {
+      "cenarios_cobertos": [
+        "shows the placeholder when no value is selected",
+        "opens the listbox on trigger click",
+        "selects a value on click",
+        "does not open when disabled",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Enter/Space abre, setas navegam as opções, Enter seleciona, Escape fecha",
+        "foco_retorna_a_origem_ao_fechar": "✅ (reka-ui devolve foco ao trigger, mesmo comportamento herdado do Popover/DropdownMenu)",
+        "roles_aria_corretos": "✅ role=combobox no trigger, role=listbox/option no conteúdo"
+      }
+    }
+  },
+  "ds_shadcn": {
+    "loc_gerado": 308,
+    "loc_final": 311,
+    "arquivos": 11,
+    "dependencias_novas": [],
+    "codigo_removido_pct": "14 / 308 generated lines ≈ 4.5% (git diff --stat, 7 of 11 files touched)",
+    "codigo_customizado_loc": 17,
+    "api_publica": {
+      "props": [
+        "Select: ...SelectRootProps (modelValue, defaultValue, disabled, dir, multiple)",
+        "SelectTrigger: ...SelectTriggerProps + class (size prop removed, see below)",
+        "SelectContent: ...SelectContentProps (position default item-aligned, align default center) + class",
+        "SelectItem: ...SelectItemProps (value, disabled, textValue) + class"
+      ],
+      "emits": ["Select: update:modelValue(value: string)"],
+      "slots": ["Select/SelectTrigger/SelectContent/SelectItem: default", "SelectItem: indicator-icon"]
+    },
+    "variantes": 0,
+    "tokens_usados": ["--ds-color-neutral-100", "--ds-color-neutral-300", "--ds-color-neutral-900", "--ds-color-brand-600", "--ds-radius-md"],
+    "residuos_shadcn_removidos": [
+      "sm/default SelectTrigger size axis dropped — no size token equivalent, single h-10 height matching Input, same simplification pattern as Tabs' variant trim",
+      "THIRD instance of the cn-* broken-class family: `cn-menu-translucent` on SelectContent (same as DropdownMenuContent) — not a real Tailwind utility",
+      "tw-animate-css animate-in/out + data-[side=*]:slide-in-from-* classes on SelectContent, same as Popover/DropdownMenu/Tooltip",
+      "bg-popover/text-popover-foreground/ring-foreground/bg-accent/text-muted-foreground/border-input -> neutral-100/neutral-300/neutral-900 tokens across Trigger/Content/Item/Label/Separator/ScrollUp+DownButton",
+      "data-placeholder: confirmed real (reka-ui's SelectTrigger sets it), left as-is — not one of the dead data-* selectors found in Checkbox/RadioGroup/Tabs",
+      "Select.vue, SelectGroup.vue, SelectItemText.vue, and SelectValue.vue needed 0 edits — none carry shadcn color/theme classes"
+    ],
+    "testes": {
+      "cenarios_cobertos": [
+        "shows the placeholder when no value is selected",
+        "opens the listbox on trigger click",
+        "selects a value on click",
+        "does not open when disabled",
+        "has no obvious a11y violations while open"
+      ],
+      "framework": "vitest + testing-library",
+      "passaram_sem_ajuste": true
+    },
+    "acessibilidade": {
+      "axe_violations": 0,
+      "checklist": {
+        "navegacao_so_teclado": "✅ Enter/Space abre, setas navegam as opções, Enter seleciona, Escape fecha",
+        "foco_retorna_a_origem_ao_fechar": "✅ mesmo comportamento do ds-reka (mesmo primitive por baixo)",
+        "roles_aria_corretos": "✅ role=combobox no trigger, role=listbox/option no conteúdo"
+      }
+    }
+  }
+}
