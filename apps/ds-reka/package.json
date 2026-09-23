@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "prestorybook": "pnpm --filter @ds-poc/tokens build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "pretest": "pnpm --filter @ds-poc/tokens build",
+    "test": "vitest --project=unit run"
   },
   "dependencies": {
     "@ds-poc/tokens": "workspace:*",
@@ -40,6 +42,11 @@
     "vitest": "latest",
     "playwright": "latest",
     "@vitest/browser-playwright": "latest",
-    "@vitest/coverage-v8": "latest"
+    "@vitest/coverage-v8": "latest",
+    "@testing-library/vue": "8.1.0",
+    "@testing-library/user-event": "14.6.7",
+    "@testing-library/jest-dom": "7.0.1",
+    "jsdom": "30.1.1",
+    "vitest-axe": "0.1.0"
   }
 }

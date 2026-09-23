@@ -5,6 +5,7 @@
   "description": "POC comparing two ways of implementing the same design system in Vue: reka-ui directly vs shadcn-vue",
   "scripts": {
     "build:tokens": "pnpm --filter @ds-poc/tokens build",
+    "test": "pnpm -r --filter ds-reka --filter ds-shadcn test",
     "storybook:reka": "pnpm --filter ds-reka storybook",
     "storybook:shadcn": "pnpm --filter ds-shadcn storybook",
     "storybook": "pnpm build:tokens && concurrently -k -n reka,shadcn -c blue,magenta \"pnpm --filter ds-reka storybook\" \"pnpm --filter ds-shadcn storybook\""
