@@ -1,8 +1,8 @@
 {
   "color": {
     "brand": {
-      "600": { "$type": "color", "$value": "#4f46e5" },
-      "700": { "$type": "color", "$value": "#4338ca" }
+      "600": { "$type": "color", "$value": "oklch(55.8% 0.288 302.321)" },
+      "700": { "$type": "color", "$value": "oklch(51.8% 0.253 323.949)" }
     },
     "neutral": {
       "100": { "$type": "color", "$value": "#f5f5f5" },
@@ -11,3 +11,4 @@
     }
   }
 }
+
